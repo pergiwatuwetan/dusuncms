@@ -18,9 +18,12 @@ class News extends Model
         'user_id',
     ];
 
-    protected $casts = [
-        'published_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+        ];
+    }
 
     public function author(): BelongsTo
     {

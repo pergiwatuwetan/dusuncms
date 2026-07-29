@@ -3,6 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import DangerButton from '@/Components/DangerButton';
+import EmptyState from '@/Components/Common/EmptyState';
 
 export default function Index({ galleries }) {
     const destroy = (gallery) => {
@@ -18,7 +19,7 @@ export default function Index({ galleries }) {
             <Head title="Galeri" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">
                             Galeri
@@ -36,7 +37,7 @@ export default function Index({ galleries }) {
                     </Link>
                 </div>
 
-                <div className="overflow-hidden rounded-lg bg-white shadow">
+                <div className="overflow-x-auto rounded-lg bg-white shadow">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
@@ -61,11 +62,12 @@ export default function Index({ galleries }) {
                         <tbody className="divide-y divide-gray-200 bg-white">
                             {galleries.data.length === 0 ? (
                                 <tr>
-                                    <td
-                                        colSpan={4}
-                                        className="px-6 py-10 text-center text-gray-500"
-                                    >
-                                        Belum ada album.
+                                    <td colSpan={4}>
+                                        <EmptyState
+                                            icon="🖼️"
+                                            title="Belum ada album"
+                                            description="Tambahkan album pertama untuk mulai mengelola dokumentasi dusun."
+                                        />
                                     </td>
                                 </tr>
                             ) : (

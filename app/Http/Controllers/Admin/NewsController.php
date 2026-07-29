@@ -16,7 +16,18 @@ class NewsController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/News/Index', [
-            'news' => News::latest()->paginate(10),
+            'news' => News::query()
+                ->select([
+                    'id',
+                    'title',
+                    'slug',
+                    'status',
+                    'published_at',
+                    'created_at',
+                ])
+                ->latest()
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -28,7 +39,11 @@ class NewsController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'status' => ['required', 'in:draft,published'],
@@ -36,12 +51,14 @@ class NewsController extends Controller
 
         News::create([
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']),
+            'slug' => $this->generateUniqueSlug($validated['title']),
             'excerpt' => $validated['excerpt'] ?? null,
             'content' => $validated['content'],
             'status' => $validated['status'],
             'user_id' => Auth::id() ?? 1,
-            'published_at' => $validated['status'] === 'published' ? now() : null,
+            'published_at' => $validated['status'] === 'published'
+                ? now()
+                : null,
         ]);
 
         return redirect()
@@ -59,7 +76,11 @@ class NewsController extends Controller
     public function update(Request $request, News $news): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'excerpt' => ['nullable', 'string'],
             'content' => ['required', 'string'],
             'status' => ['required', 'in:draft,published'],
@@ -67,12 +88,15 @@ class NewsController extends Controller
 
         $news->update([
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']),
+            'slug' => $this->generateUniqueSlug(
+                $validated['title'],
+                $news
+            ),
             'excerpt' => $validated['excerpt'] ?? null,
             'content' => $validated['content'],
             'status' => $validated['status'],
             'published_at' => $validated['status'] === 'published'
-                ? $news->published_at ?? now()
+                ? ($news->published_at ?? now())
                 : null,
         ]);
 
@@ -88,5 +112,31 @@ class NewsController extends Controller
         return redirect()
             ->route('news.index')
             ->with('success', 'Berita berhasil dihapus.');
+    }
+
+    /**
+     * Generate unique slug.
+     */
+    private function generateUniqueSlug(
+        string $title,
+        ?News $ignore = null
+    ): string {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (
+            News::where('slug', $slug)
+                ->when(
+                    $ignore,
+                    fn ($query) => $query->where('id', '!=', $ignore->id)
+                )
+                ->exists()
+        ) {
+            $slug = "{$originalSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
     }
 }

@@ -8,7 +8,7 @@ import { Head, useForm } from "@inertiajs/react";
 import { useState } from "react";
 
 export default function Edit({ setting }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         village_name: setting.village_name ?? "",
 
         logo: null,
@@ -45,10 +45,14 @@ const [heroPreview, setHeroPreview] = useState(
     setting.hero_image_url ?? null
 );
     const submit = (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        put(route("website-settings.update"), {
+    post(route("website-settings.update"), {
             forceFormData: true,
+            data: {
+                ...data,
+                _method: "put",
+            },
         });
     };
 
@@ -114,6 +118,8 @@ const [heroPreview, setHeroPreview] = useState(
                                         <img
                                             src={logoPreview}
                                             alt="Logo Website"
+                                            loading="lazy"
+                                            decoding="async"
                                             className="mt-3 h-32 w-32 rounded-xl border object-contain"
                                         />
                                     )}

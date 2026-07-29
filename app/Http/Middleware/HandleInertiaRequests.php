@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\WebsiteSetting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,7 +38,10 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
 
-            'setting' => WebsiteSetting::first(),
+            'setting' => Cache::rememberForever(
+                'website_setting',
+                fn () => WebsiteSetting::first()
+            ),
 
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

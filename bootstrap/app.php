@@ -19,5 +19,33 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })->create();
+
+        $exceptions->respond(function (
+            \Symfony\Component\HttpFoundation\Response $response,
+            \Throwable $exception,
+            \Illuminate\Http\Request $request
+        ) {
+
+            if ($request->expectsJson()) {
+                return $response;
+            }
+
+            $status = $response->getStatusCode();
+
+            if (in_array($status, [403, 404])) {
+                return \Inertia\Inertia::render("Errors/{$status}")
+                    ->toResponse($request)
+                    ->setStatusCode($status);
+            }
+
+            if ($status === 500 && app()->environment('production')) {
+                return \Inertia\Inertia::render('Errors/500')
+                    ->toResponse($request)
+                    ->setStatusCode(500);
+            }
+
+            return $response;
+        });
+
+    })
+    ->create();

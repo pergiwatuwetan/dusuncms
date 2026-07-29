@@ -7,6 +7,7 @@ import {
     Eye,
     EyeOff,
 } from "lucide-react";
+import EmptyState from "@/Components/Common/EmptyState";
 
 export default function Index({ officials }) {
     const destroy = (official) => {
@@ -26,7 +27,7 @@ export default function Index({ officials }) {
             <Head title="Perangkat Dusun" />
 
             <div className="space-y-6">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-bold">
                             Perangkat Dusun
@@ -41,14 +42,14 @@ export default function Index({ officials }) {
                         href={route(
                             "village-officials.create"
                         )}
-                        className="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-white transition hover:bg-green-700 sm:w-auto"
                     >
                         <Plus size={18} />
                         Tambah
                     </Link>
                 </div>
 
-                <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <div className="overflow-x-auto rounded-xl border bg-white shadow-sm">
                     <table className="min-w-full">
                         <thead className="bg-gray-100">
                             <tr>
@@ -79,20 +80,20 @@ export default function Index({ officials }) {
                         </thead>
 
                         <tbody>
-                            {!officials?.data?.length === 0 && (
+                            {officials.data.length === 0 && (
                                 <tr>
-                                    <td
-                                        colSpan="6"
-                                        className="px-6 py-8 text-center text-gray-500"
-                                    >
-                                        Belum ada data perangkat
-                                        dusun.
+                                    <td colSpan={6}>
+                                        <EmptyState
+                                            icon="👨‍💼"
+                                            title="Belum ada perangkat dusun"
+                                            description="Tambahkan perangkat dusun pertama untuk ditampilkan di website."
+                                        />
                                     </td>
                                 </tr>
                             )}
 
-                            {officials.data.map(
-                                (official) => (
+                            {officials.data.length > 0 &&
+                                officials.data.map((official) => (
                                     <tr
                                         key={official.id}
                                         className="border-t"
@@ -100,12 +101,10 @@ export default function Index({ officials }) {
                                         <td className="px-4 py-3">
                                             {official.photo_url ? (
                                                 <img
-                                                    src={
-                                                        official.photo_url
-                                                    }
-                                                    alt={
-                                                        official.name
-                                                    }
+                                                    src={official.photo_url}
+                                                    alt={official.name}
+                                                    loading="lazy"
+                                                    decoding="async"
                                                     className="h-14 w-14 rounded-lg object-cover"
                                                 />
                                             ) : (

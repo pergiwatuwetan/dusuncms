@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class VillageOfficial extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'photo',
         'name',
@@ -23,18 +18,18 @@ class VillageOfficial extends Model
         'is_active',
     ];
 
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var list<string>
-     */
     protected $appends = [
         'photo_url',
     ];
 
-    /**
-     * Get the official photo URL.
-     */
+    protected function casts(): array
+    {
+        return [
+            'sort_order' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
     protected function photoUrl(): Attribute
     {
         return Attribute::make(

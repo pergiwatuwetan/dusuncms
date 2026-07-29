@@ -36,6 +36,13 @@ return new class extends Migration
             // Maps
             $table->text('maps_embed')->nullable();
 
+            // Statistics
+            $table->unsignedInteger('population')->default(0);
+            $table->unsignedInteger('family_cards')->default(0);
+            $table->unsignedInteger('rt_count')->default(0);
+            $table->unsignedInteger('rw_count')->default(0);
+            $table->decimal('area_size', 10, 2)->default(0);
+
             // Social Media
             $table->string('facebook')->nullable();
             $table->string('instagram')->nullable();

@@ -26,6 +26,10 @@ return new class extends Migration
 
             $table->timestamps();
 
+            $table->index([
+                'gallery_id',
+                'sort_order',
+            ]);
         });
     }
 

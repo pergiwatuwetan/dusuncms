@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\WebsiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,12 +17,16 @@ class WebsiteSettingController extends Controller
      */
     public function edit(): Response
     {
-        $setting = WebsiteSetting::first();
+        $setting = Cache::rememberForever('website_setting', function () {
+            return WebsiteSetting::first();
+        });
 
         if (! $setting) {
             $setting = WebsiteSetting::create([
                 'village_name' => 'Nama Dusun',
             ]);
+
+            Cache::forever('website_setting', $setting);
         }
 
         return Inertia::render('Admin/WebsiteSettings/Edit', [
@@ -108,6 +113,13 @@ class WebsiteSettingController extends Controller
         }
 
         $setting->update($validated);
+
+        Cache::forget('website_setting');
+
+        Cache::forever(
+            'website_setting',
+            $setting->fresh()
+        );
 
         return redirect()
             ->route('website-settings.edit')

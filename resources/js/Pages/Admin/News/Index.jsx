@@ -1,6 +1,7 @@
 import { Head, Link, router } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Button from "@/Components/UI/Button";
+import EmptyState from "@/Components/Common/EmptyState";
 
 export default function Index({ news }) {
     const destroy = (id) => {
@@ -15,7 +16,7 @@ export default function Index({ news }) {
         <AdminLayout>
             <Head title="Manajemen Berita" />
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900">
                         Manajemen Berita
@@ -31,7 +32,7 @@ export default function Index({ news }) {
                 </Button>
             </div>
 
-            <div className="overflow-hidden rounded-xl bg-white shadow">
+            <div className="overflow-x-auto rounded-xl bg-white shadow">
                 <table className="min-w-full">
                     <thead className="bg-slate-100">
                         <tr>
@@ -56,11 +57,12 @@ export default function Index({ news }) {
                     <tbody>
                         {news.data.length === 0 ? (
                             <tr>
-                                <td
-                                    colSpan="4"
-                                    className="px-6 py-12 text-center text-slate-500"
-                                >
-                                    Belum ada berita.
+                                <td colSpan="4">
+                                    <EmptyState
+                                        icon="📰"
+                                        title="Belum ada berita"
+                                        description="Tambahkan berita pertama untuk ditampilkan di website."
+                                    />
                                 </td>
                             </tr>
                         ) : (

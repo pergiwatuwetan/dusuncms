@@ -15,9 +15,22 @@ class VillageOfficialController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/VillageOfficials/Index', [
-            'officials' => VillageOfficial::orderBy('sort_order')
+            'officials' => VillageOfficial::query()
+                ->select([
+                    'id',
+                    'photo',
+                    'name',
+                    'position',
+                    'phone',
+                    'email',
+                    'sort_order',
+                    'is_active',
+                    'created_at',
+                ])
+                ->orderBy('sort_order')
                 ->orderBy('name')
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -29,14 +42,42 @@ class VillageOfficialController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'name' => ['required', 'max:255'],
-            'position' => ['required', 'max:255'],
+            'photo' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'position' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'bio' => ['nullable', 'string'],
-            'phone' => ['nullable', 'max:50'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'sort_order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['required', 'boolean'],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+            'sort_order' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+            'is_active' => [
+                'required',
+                'boolean',
+            ],
         ]);
 
         if ($request->hasFile('photo')) {
@@ -62,14 +103,42 @@ class VillageOfficialController extends Controller
         VillageOfficial $villageOfficial
     ): RedirectResponse {
         $validated = $request->validate([
-            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'name' => ['required', 'max:255'],
-            'position' => ['required', 'max:255'],
+            'photo' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'position' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'bio' => ['nullable', 'string'],
-            'phone' => ['nullable', 'max:50'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'sort_order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['required', 'boolean'],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+            'sort_order' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+            'is_active' => [
+                'required',
+                'boolean',
+            ],
         ]);
 
         if ($request->hasFile('photo')) {

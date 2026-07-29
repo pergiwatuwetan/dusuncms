@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class WebsiteSetting extends Model
 {
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         // General
         'village_name',
@@ -48,19 +43,22 @@ class WebsiteSetting extends Model
         'youtube',
     ];
 
-    /**
-     * Appended attributes.
-     *
-     * @var list<string>
-     */
     protected $appends = [
         'logo_url',
         'hero_image_url',
     ];
 
-    /**
-     * Get logo URL.
-     */
+    protected function casts(): array
+    {
+        return [
+            'population' => 'integer',
+            'family_cards' => 'integer',
+            'rt_count' => 'integer',
+            'rw_count' => 'integer',
+            'area_size' => 'float',
+        ];
+    }
+
     protected function logoUrl(): Attribute
     {
         return Attribute::make(
@@ -70,9 +68,6 @@ class WebsiteSetting extends Model
         );
     }
 
-    /**
-     * Get hero image URL.
-     */
     protected function heroImageUrl(): Attribute
     {
         return Attribute::make(

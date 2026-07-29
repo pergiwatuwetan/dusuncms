@@ -6,7 +6,9 @@ import Button from "@/Components/UI/Button";
 import { navigation } from "@/data/navigation";
 
 export default function Navbar() {
-    const { url, setting } = usePage().props;
+    const { props, url } = usePage();
+    const { setting } = props;
+
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const villageName = setting?.village_name || "DusunCMS";
@@ -16,10 +18,7 @@ export default function Navbar() {
             <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
 
                 {/* Logo */}
-                <Link
-                    href="/"
-                    className="flex items-center gap-3"
-                >
+                <Link href="/" className="flex items-center gap-3">
                     {setting?.logo_url ? (
                         <img
                             src={setting.logo_url}
@@ -45,39 +44,42 @@ export default function Navbar() {
 
                 {/* Desktop Menu */}
                 <nav className="hidden items-center gap-8 md:flex">
-                    {navigation.map((item) => {
-                        const isAnchor = item.href.startsWith("/#");
+                    {navigation
+                        .filter((item) => item?.href)
+                        .map((item) => {
+                            const href = item.href;
+                            const isAnchor = href.startsWith("/#");
 
-                        const active =
-                            (!isAnchor &&
-                                url === item.href) ||
-                            (!isAnchor &&
-                                url.startsWith(item.href + "/"));
+                            const active =
+                                !isAnchor &&
+                                (url === href ||
+                                    (href !== "/" &&
+                                        url.startsWith(href + "/")));
 
-                        const className = `transition ${
-                            active
-                                ? "font-semibold text-emerald-600"
-                                : "text-slate-700 hover:text-emerald-600"
-                        }`;
+                            const className = `transition ${
+                                active
+                                    ? "font-semibold text-emerald-600"
+                                    : "text-slate-700 hover:text-emerald-600"
+                            }`;
 
-                        return isAnchor ? (
-                            <a
-                                key={item.name}
-                                href={item.href}
-                                className={className}
-                            >
-                                {item.name}
-                            </a>
-                        ) : (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={className}
-                            >
-                                {item.name}
-                            </Link>
-                        );
-                    })}
+                            return isAnchor ? (
+                                <a
+                                    key={item.name}
+                                    href={href}
+                                    className={className}
+                                >
+                                    {item.name}
+                                </a>
+                            ) : (
+                                <Link
+                                    key={item.name}
+                                    href={href}
+                                    className={className}
+                                >
+                                    {item.name}
+                                </Link>
+                            );
+                        })}
                 </nav>
 
                 {/* Right */}
@@ -90,9 +92,7 @@ export default function Navbar() {
                     </Button>
 
                     <button
-                        onClick={() =>
-                            setMobileOpen(!mobileOpen)
-                        }
+                        onClick={() => setMobileOpen(!mobileOpen)}
                         className="rounded-xl p-2 hover:bg-slate-100 md:hidden"
                     >
                         {mobileOpen ? (
@@ -109,34 +109,32 @@ export default function Navbar() {
                 <div className="border-t bg-white md:hidden">
                     <nav className="flex flex-col p-4">
 
-                        {navigation.map((item) => {
-                            const isAnchor =
-                                item.href.startsWith("/#");
+                        {navigation
+                            .filter((item) => item?.href)
+                            .map((item) => {
+                                const href = item.href;
+                                const isAnchor = href.startsWith("/#");
 
-                            return isAnchor ? (
-                                <a
-                                    key={item.name}
-                                    href={item.href}
-                                    onClick={() =>
-                                        setMobileOpen(false)
-                                    }
-                                    className="rounded-lg px-4 py-3 hover:bg-slate-100"
-                                >
-                                    {item.name}
-                                </a>
-                            ) : (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    onClick={() =>
-                                        setMobileOpen(false)
-                                    }
-                                    className="rounded-lg px-4 py-3 hover:bg-slate-100"
-                                >
-                                    {item.name}
-                                </Link>
-                            );
-                        })}
+                                return isAnchor ? (
+                                    <a
+                                        key={item.name}
+                                        href={href}
+                                        onClick={() => setMobileOpen(false)}
+                                        className="rounded-lg px-4 py-3 hover:bg-slate-100"
+                                    >
+                                        {item.name}
+                                    </a>
+                                ) : (
+                                    <Link
+                                        key={item.name}
+                                        href={href}
+                                        onClick={() => setMobileOpen(false)}
+                                        className="rounded-lg px-4 py-3 hover:bg-slate-100"
+                                    >
+                                        {item.name}
+                                    </Link>
+                                );
+                            })}
 
                         <Link
                             href="/login"
@@ -144,7 +142,6 @@ export default function Navbar() {
                         >
                             Login Admin
                         </Link>
-
                     </nav>
                 </div>
             )}

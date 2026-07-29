@@ -15,9 +15,17 @@ class GalleryController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/Gallery/Index', [
-            'galleries' => Gallery::withCount('images')
+            'galleries' => Gallery::query()
+                ->select([
+                    'id',
+                    'title',
+                    'description',
+                    'created_at',
+                ])
+                ->withCount('images')
                 ->latest()
-                ->paginate(10),
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -29,7 +37,11 @@ class GalleryController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -42,7 +54,18 @@ class GalleryController extends Controller
 
     public function edit(Gallery $gallery): Response
     {
-        $gallery->load('images');
+        $gallery->load([
+            'images' => fn ($query) => $query
+                ->select([
+                    'id',
+                    'gallery_id',
+                    'image',
+                    'sort_order',
+                    'created_at',
+                ])
+                ->orderBy('sort_order')
+                ->orderBy('id'),
+        ]);
 
         return Inertia::render('Admin/Gallery/Edit', [
             'gallery' => $gallery,
@@ -52,15 +75,20 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'max:255'],
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'description' => ['nullable', 'string'],
         ]);
 
         $gallery->update($validated);
 
-        return redirect()
-            ->back()
-            ->with('success', 'Album berhasil diperbarui.');
+        return back()->with(
+            'success',
+            'Album berhasil diperbarui.'
+        );
     }
 
     public function destroy(Gallery $gallery): RedirectResponse
@@ -76,6 +104,8 @@ class GalleryController extends Controller
             }
         }
 
+        // Record gallery_images akan ikut terhapus
+        // karena foreign key menggunakan cascadeOnDelete().
         $gallery->delete();
 
         return redirect()

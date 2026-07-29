@@ -13,6 +13,13 @@ class GalleryImage extends Model
         'sort_order',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'sort_order' => 'integer',
+        ];
+    }
+
     public function gallery(): BelongsTo
     {
         return $this->belongsTo(Gallery::class);

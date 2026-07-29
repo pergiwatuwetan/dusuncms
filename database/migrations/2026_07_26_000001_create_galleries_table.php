@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('galleries', function (Blueprint $table) {
-
             $table->id();
 
             $table->string('title');
@@ -21,7 +20,6 @@ return new class extends Migration
                 ->nullable();
 
             $table->timestamps();
-
         });
     }
 

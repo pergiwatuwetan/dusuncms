@@ -1,12 +1,6 @@
 import { usePage } from "@inertiajs/react";
-import {
-    Facebook,
-    Instagram,
-    Youtube,
-    MapPin,
-    Phone,
-    Mail,
-} from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
     const { setting } = usePage().props;
@@ -60,33 +54,21 @@ export default function Footer() {
 
                         {setting?.address && (
                             <div className="flex items-start gap-3">
-                                <MapPin
-                                    size={18}
-                                    className="mt-0.5 text-emerald-600"
-                                />
-
+                                <MapPin size={18} className="mt-0.5 text-emerald-600" />
                                 <span>{setting.address}</span>
                             </div>
                         )}
 
                         {setting?.phone && (
                             <div className="flex items-center gap-3">
-                                <Phone
-                                    size={18}
-                                    className="text-emerald-600"
-                                />
-
+                                <Phone size={18} className="text-emerald-600" />
                                 <span>{setting.phone}</span>
                             </div>
                         )}
 
                         {setting?.email && (
                             <div className="flex items-center gap-3">
-                                <Mail
-                                    size={18}
-                                    className="text-emerald-600"
-                                />
-
+                                <Mail size={18} className="text-emerald-600" />
                                 <span>{setting.email}</span>
                             </div>
                         )}
@@ -109,8 +91,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-slate-600 transition hover:text-emerald-600"
                             >
-                                <Facebook size={18} />
-
+                                <FaFacebook size={18} />
                                 <span>Facebook</span>
                             </a>
                         )}
@@ -122,8 +103,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-slate-600 transition hover:text-emerald-600"
                             >
-                                <Instagram size={18} />
-
+                                <FaInstagram size={18} />
                                 <span>Instagram</span>
                             </a>
                         )}
@@ -135,8 +115,7 @@ export default function Footer() {
                                 rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-slate-600 transition hover:text-emerald-600"
                             >
-                                <Youtube size={18} />
-
+                                <FaYoutube size={18} />
                                 <span>YouTube</span>
                             </a>
                         )}
@@ -145,11 +124,9 @@ export default function Footer() {
                             !setting?.instagram &&
                             !setting?.youtube && (
                                 <p className="text-sm text-slate-500">
-                                    Belum ada media sosial yang
-                                    ditambahkan.
+                                    Belum ada media sosial yang ditambahkan.
                                 </p>
                             )}
-
                     </div>
                 </div>
             </div>

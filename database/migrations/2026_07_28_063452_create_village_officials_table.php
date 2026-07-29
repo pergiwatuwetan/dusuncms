@@ -32,8 +32,11 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->index('sort_order');
-            $table->index('is_active');
+            $table->index([
+                'is_active',
+                'sort_order',
+                'name',
+            ]);
         });
     }
 

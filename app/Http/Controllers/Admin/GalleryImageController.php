@@ -14,8 +14,13 @@ class GalleryImageController extends Controller
     public function store(Request $request, Gallery $gallery): RedirectResponse
     {
         $validated = $request->validate([
-            'images' => ['required', 'array', 'min:1'],
+            'images' => [
+                'required',
+                'array',
+                'min:1',
+            ],
             'images.*' => [
+                'required',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:4096',
@@ -25,11 +30,9 @@ class GalleryImageController extends Controller
         $lastOrder = $gallery->images()->max('sort_order') ?? 0;
 
         foreach ($validated['images'] as $index => $image) {
-
             $path = $image->store('gallery', 'public');
 
-            GalleryImage::create([
-                'gallery_id' => $gallery->id,
+            $gallery->images()->create([
                 'image' => $path,
                 'sort_order' => $lastOrder + $index + 1,
             ]);

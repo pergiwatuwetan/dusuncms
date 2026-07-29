@@ -82,7 +82,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         [WebsiteSettingController::class, 'edit']
     )->name('website-settings.edit');
 
-    Route::put(
+    Route::match(
+        ['post', 'put'],
         '/website-settings',
         [WebsiteSettingController::class, 'update']
     )->name('website-settings.update');
