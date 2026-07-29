@@ -6,7 +6,12 @@ services:
 
     dockerfilePath: ./Dockerfile
 
+    healthCheckPath: /
+
     envVars:
+      - key: APP_NAME
+        value: DusunCMS
+
       - key: APP_ENV
         value: production
 
@@ -15,6 +20,9 @@ services:
 
       - key: LOG_CHANNEL
         value: stack
+
+      - key: LOG_LEVEL
+        value: error
 
       - key: FILESYSTEM_DISK
         value: public
