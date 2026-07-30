@@ -3,7 +3,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import Textarea from "@/Components/Textarea";
+import Textarea from "@/Components/UI/Textarea";
 import { Head, useForm } from "@inertiajs/react";
 import { useState } from "react";
 
